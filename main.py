@@ -16,6 +16,8 @@ class MainWindow(QMainWindow):
         self.toponym_longitude, self.toponym_lattitude = "37.617734", "55.752004"
         self.map_layer = "map"
         self.z = 15
+        # Добавил размер шага для смещения изображения
+        self.step = 0.3
         self.show_map()
 
     def show_map(self):
@@ -36,27 +38,55 @@ class MainWindow(QMainWindow):
         self.hyb_btn.clicked.connect(self.layer_clicked)
 
     def keyPressEvent(self, event):
-        print(self.z)
-        if event.key() == Qt.Key_Up:
+
+        # Заменил названия обрабатываемых клавиш
+        if event.key() == Qt.Key_PageUp:
             self.z += 1
             if self.z < 0 or self.z > 19:
                 self.z -= 1
             self.show_map()
-        if event.key() == Qt.Key_Down:
+
+        elif event.key() == Qt.Key_PageDown:
             self.z -= 1
             if self.z < 0 or self.z > 19:
                 self.z += 1
             self.show_map()
 
+
+        # Добавил обработку кнопок для смещения и кнопку выхода
+        elif event.key() == Qt.Key_Right:
+            self.toponym_longitude = str(float(self.toponym_longitude) + self.step)
+            self.show_map()
+
+        elif event.key() == Qt.Key_Left:
+            self.toponym_longitude = str(float(self.toponym_longitude) - self.step)
+            self.show_map()
+
+        elif event.key() == Qt.Key_Up:
+            self.toponym_lattitude = str(float(self.toponym_lattitude) + self.step)
+            self.show_map()
+
+        elif event.key() == Qt.Key_Down:
+            self.toponym_lattitude = str(float(self.toponym_lattitude) - self.step)
+            self.show_map()
+
+        elif event.key() == Qt.Key_Escape:
+            exit()
+
+
+
     def layer_clicked(self):
         button = QApplication.instance().sender()
         print(button.text())
+
         if button.text() == 'Схема':
             self.map_layer = 'map'
             self.show_map()
-        if button.text() == 'С путник':
+
+        if button.text() == 'Спутник':
             self.map_layer = 'sat'
             self.show_map()
+
         if button.text() == 'Гибрид':
             self.map_layer = 'sat,skl'
             self.show_map()
