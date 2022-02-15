@@ -26,8 +26,12 @@ class MainWindow(QMainWindow):
             "ll": ",".join([self.toponym_longitude, self.toponym_lattitude]),
             "spn": ",".join([self.delta, self.delta]),
             "l": self.map_layer,
+            "pt": ",".join([self.toponym_longitude, self.toponym_lattitude, "pm2rdm"])
         }
         response = requests.get(map_api_server, params=map_params)
+
+        print(response.url)
+
         if not response:
             self.internet_connection_error()
         pixmap = QPixmap()
